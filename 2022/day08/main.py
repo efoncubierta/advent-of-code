@@ -34,4 +34,4 @@ for i in range(1, len(inputs) - 1):
         total = reduce(lambda acc, n: acc * n, values, 1)
         score = total if total > score else score
 
-print("Total #1: {}".format(score))
+print("Total #2: {}".format(score))
