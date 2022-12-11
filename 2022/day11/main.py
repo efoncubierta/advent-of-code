@@ -11,11 +11,9 @@ with open("input.txt", "r") as f:
         ]
     ] for k in [j.split("\n")[1:] for j in [i for i in f.read().split("\n\n")]]]
 
-stats = []
-for i in range(0, len(inputs)):
-    stats.append(0)
+stats = [0] * len(inputs)
 
-def calculate(n, f):
+def calculate(n, adjustFunc):
     for _ in range(0, n):
         for i, input in enumerate(inputs):
             for item in input[0]:
@@ -24,7 +22,7 @@ def calculate(n, f):
                 else:
                     item *= item if input[1][2] == "old" else int(input[1][2])
 
-                item = f(item)
+                item = adjustFunc(item)
 
                 if (item % input[2][0]) == 0:
                     inputs[input[2][1]][0].append(item)
