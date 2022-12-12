@@ -2,8 +2,10 @@ with open("input.txt", "r") as f:
     inputs = [list(i) for i in f.read().split("\n")]
 
 start = [
-    (i, j) for i in range(len(inputs))
-    for j in range(len(inputs[0])) if inputs[i][j] == 'S'
+    (i, j)
+    for i in range(len(inputs))
+    for j in range(len(inputs[0]))
+    if inputs[i][j] == 'S'
 ][0]
 inputs[start[0]][start[1]] = 'a'
 
@@ -25,7 +27,7 @@ def minDistance(init):
                 (p[0], p[1] + 1),
                 (p[0], p[1] - 1),
                 (p[0] + 1, p[1]),
-                (p[0] + -1, p[1]),
+                (p[0] - 1, p[1]),
             ]
             if (
                 n[0] >= 0 and
@@ -48,8 +50,12 @@ def minDistance(init):
 print("Shortest path #1: {}".format(minDistance(start)))
 
 print("Shortest path #2: {}".format(min([
-    v for v in [
-        minDistance((r, c)) for r in range(len(inputs))
-        for c in range(len(inputs[0])) if inputs[r][c] == 'a'
-    ] if v > -1
+    v
+    for v in [
+        minDistance((r, c))
+        for r in range(len(inputs))
+        for c in range(len(inputs[0]))
+        if inputs[r][c] == 'a'
+    ]
+    if v > -1
 ])))
