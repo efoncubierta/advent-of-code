@@ -10,7 +10,6 @@ def cmp_to_key(cmp):
             return cmp(self.obj, other.obj) < 0
     return K
 
-
 with open("input.txt", "r") as f:
     inputs = [
         [
@@ -19,7 +18,6 @@ with open("input.txt", "r") as f:
         ]
         for i in f.read().split("\n\n")
     ]
-
 
 def compare(p1, p2):
     if isinstance(p1, int) and isinstance(p2, int):
@@ -30,19 +28,11 @@ def compare(p1, p2):
 
     for i in range(len(p1)):
         if i == len(p2):
-            break
-        c = compare(p1[i], p2[i])
-        if c != 0:
+            return 1
+        if c := compare(p1[i], p2[i]):
             return c
 
-    if len(p1) < len(p2):
-        return -1
-
-    if len(p2) < len(p1):
-        return 1
-
-    return 0
-
+    return -1 if len(p1) < len(p2) else 0
 
 print("Part #1: {}".format(sum([
     i + 1
