@@ -1,5 +1,4 @@
 import math
-import numpy as np
 import json
 
 def cmp_to_key(cmp):
@@ -21,7 +20,7 @@ with open("input.txt", "r") as f:
 
 def compare(p1, p2):
     if isinstance(p1, int) and isinstance(p2, int):
-        return np.sign(p1 - p2)
+        return 0 if p1 == p2 else abs(p1 - p2) / (p1 - p2)
 
     p1 = [p1] if isinstance(p1, int) else p1
     p2 = [p2] if isinstance(p2, int) else p2
