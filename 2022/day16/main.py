@@ -1,6 +1,4 @@
-import time
 import re
-from functools import reduce
 
 with open("input.txt", "r") as f:
     inputs = [
@@ -54,10 +52,7 @@ def scan(vi, rs, t, multiple=False):
     # value to compare with my scan.
     return max(maxPressure, scan(vi, rs, 26, False) if multiple else 0)
 
-now = time.time()
 rs = [(ri, r) for ri, r in enumerate(R.copy()) if r > 0]
 print("Max pressure #1: {}".format(scan(V.index('AA'), rs, 30)))
-print("Time: {}".format(time.time() - now))
 rs = [(ri, r) for ri, r in enumerate(R.copy()) if r > 0]
 print("Max pressure #2: {}".format(scan(V.index('AA'), rs, 26, True)))
-print("Time: {}".format(time.time() - now))
