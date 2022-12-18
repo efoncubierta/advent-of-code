@@ -7,16 +7,18 @@ with open("input.txt", "r") as f:
         for i in f.read().splitlines()
     ])
 
-total = 6 * len(droplets)
+def addT(t1, t2):
+    return (t1[0]+t2[0], t1[1]+t2[1], t1[2]+t2[2])
 
+# calculate total surface
+total = 6 * len(droplets)
+# and substract -2 per adjacent droplets
 for droplet in droplets:
-    # only need to count in three directions
     for adj in [(1, 0, 0), (0, 1, 0), (0, 0, 1)]:
-        if (droplet[0]+adj[0], droplet[1]+adj[1], droplet[2]+adj[2]) in droplets:
+        if addT(droplet, adj) in droplets:
             total -= 2
 
-print("Part #1: {}".format(total))
-
+# define a volume containing al droplets
 minmax = (
     (100000, 100000, 100000),
     (0, 0, 0)
@@ -32,6 +34,7 @@ for droplet in droplets:
         max(minmax[1][2], droplet[2] + 2)
     ))
 
+# crawl the volumen and find all cubes outside
 outside = set()
 adjs = [minmax[0]]
 while adjs:
@@ -43,16 +46,19 @@ while adjs:
 
     # crawl in all directions
     for adj in [(-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0), (0, 0, -1), (0, 0, 1)]:
-        if minmax[0][0] <= o[0] + adj[0] < minmax[1][0] and \
-                minmax[0][1] <= o[1] + adj[1] < minmax[1][1] and \
-                minmax[0][2] <= o[2] + adj[2] < minmax[1][2]:
-            adjs.append((o[0] + adj[0], o[1] + adj[1], o[2] + adj[2]))
+        a = addT(o, adj)
+        if minmax[0][0] <= a[0] < minmax[1][0] and \
+                minmax[0][1] <= a[1] < minmax[1][1] and \
+                minmax[0][2] <= a[2] < minmax[1][2]:
+            adjs.append(a)
 
+# calculate total surface in contact with the ouside
 totalOutside = 0
 for droplet in droplets:
     # only need to count in three direction if adjacent is outside
     for adj in [(1, 0, 0), (0, 1, 0), (0, 0, 1)]:
-        if (droplet[0]+adj[0], droplet[1]+adj[1], droplet[2]+adj[2]) in outside:
+        if addT(droplet, adj) in outside:
             totalOutside += 2
 
+print("Part #1: {}".format(total))
 print("Part #2: {}".format(totalOutside))
