@@ -37,20 +37,14 @@ def move(board, x, y, mi, pi):
 
     # can move sideways?
     for yi, pr in enumerate(p):
-        if (y + yi) >= len(board):
-            continue
-        if board[y + yi] & (pr >> nx):
+        if (y + yi) < len(board) and board[y + yi] & (pr >> nx):
             nx = x
             break
 
     # can move downwards?
     for yi, pr in enumerate(p):
-        if (y + yi) > len(board) or len(board) == 0:
-            continue
-
-        if board[y + yi - 1] & (pr >> nx):
+        if len(board) and (y + yi) <= len(board) and board[y + yi - 1] & (pr >> nx):
             ny = y
-            break
 
     return (nx, ny)
 
@@ -58,7 +52,7 @@ def move(board, x, y, mi, pi):
 def run(n):
     board = []
     m = 0
-    prev = (0, 0, 0)
+    cycle = (0, 0, 0)
     for i in range(0, n):
         pi = i % 5
         (x, y, (_, p)) = (2, len(board) + 3, pieces[pi])
@@ -82,23 +76,23 @@ def run(n):
             else:
                 board[y + yi] |= pr
 
+        # find cycles in the board for first line and piece
         if len(board) > 1 and board[-1] == board[0] and pi == 0:
-            if prev == (0, 0, 0):
-                prev = (m % len(moves), i, len(board))
-            elif prev[0] == (m % len(moves)):
-                return (i - prev[1], len(board) - prev[2])
+            # capture first coincidence
+            if cycle == (0, 0, 0):
+                cycle = (m % len(moves), i, len(board))
+            # capture second coincidence
+            elif cycle[0] == (m % len(moves)):
+                iterations = i - cycle[1]
+                length = len(board) - cycle[2]
+                # estimate length and calculate remaining moves
+                return length * math.floor(n / iterations) + run(n % iterations)
 
-    return (n, len(board))
+    return len(board)
 
 
 # Part 1
-n = 2022
-(cycle, count) = run(n)
-(_, count2) = run(n % cycle)
-print("Part #1: {}".format(count * math.floor(n / cycle) + count2))
+print("Part #1: {}".format(run(2022)))
 
 # Part 2
-n = 1000000000000
-(cycle, count) = run(n)
-(_, count2) = run(n % cycle)
-print("Part #2: {}".format(count * math.floor(n / cycle) + count2))
+print("Part #2: {}".format(run(1000000000000)))
