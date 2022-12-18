@@ -31,8 +31,10 @@ pieces = [
 
 
 def move(board, x, y, mi, pi):
-    (pl, p) = pieces[pi]
-    nx = max(0, x - 1) if moves[mi] == "<" else min(7 - pl, x + 1)
+    (pw, p) = pieces[pi]
+
+    # move piece within range
+    nx = max(0, x - 1) if moves[mi] == "<" else min(7 - pw, x + 1)
     ny = max(0, y - 1)
 
     # can move sideways?
@@ -45,21 +47,22 @@ def move(board, x, y, mi, pi):
     for yi, pr in enumerate(p):
         if len(board) and (y + yi) <= len(board) and board[y + yi - 1] & (pr >> nx):
             ny = y
+            break
 
     return (nx, ny)
 
 
 def run(n):
     board = []
-    m = 0
+    gmi = 0
     cycle = (0, 0, 0)
     for i in range(0, n):
         pi = i % 5
         (x, y, (_, p)) = (2, len(board) + 3, pieces[pi])
         falling = True
         while falling:
-            for mi in range(m % len(moves), len(moves)):
-                m += 1
+            for mi in range(gmi % len(moves), len(moves)):
+                gmi += 1
                 (x, ny) = move(board, x, y, mi, pi)
 
                 if ny == y:
@@ -76,13 +79,13 @@ def run(n):
             else:
                 board[y + yi] |= pr
 
-        # find cycles in the board for first line and piece
+        # find cycles in the board for first line, piece and move
         if len(board) > 1 and board[-1] == board[0] and pi == 0:
             # capture first coincidence
             if cycle == (0, 0, 0):
-                cycle = (m % len(moves), i, len(board))
+                cycle = (gmi % len(moves), i, len(board))
             # capture second coincidence
-            elif cycle[0] == (m % len(moves)):
+            elif cycle[0] == (gmi % len(moves)):
                 iterations = i - cycle[1]
                 length = len(board) - cycle[2]
                 # estimate length and calculate remaining moves
