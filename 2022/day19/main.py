@@ -59,6 +59,7 @@ def find(blueprint, s, m):
             (
                 ro + 1, rc, rb, rg,
                 o + ro - blueprint[1], c + rc, b + rb, g + rg,
+                t - 1
             )
         ))
     next.append((
