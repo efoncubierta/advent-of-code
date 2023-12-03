@@ -73,8 +73,7 @@ for (row, col) in gears:
     # find all numbers in gear's range
     ns = [
         n
-        for (n_row, n_col_start, n_col_end, n) in numbers
-        if (
+        for (n_row, n_col_start, n_col_end, n) in numbers if (
             (n_col_start-1 <= col <= n_col_end+1) and
             (n_row-1 <= row <= n_row+1)
         )
