@@ -6,12 +6,10 @@ with open("input.txt", "r") as file:
 maps = []
 for input in inputs:
     m = re.search("([^:]+):\n? ?(.*)", input, re.DOTALL)
-    mn = [
+    maps.append(sorted([
         [int(n) for n in x.split(" ")]
         for x in m.group(2).split("\n")
-    ]
-    mn.sort(key=lambda x: x[1])
-    maps.append(mn)
+    ], key=lambda x: x[1]))
 
 # Part 1
 def mapNext(v, map):
@@ -28,6 +26,7 @@ for s in maps[0][0]: # seeds
 
 print("Part 1: {}".format(min(result)))
 
+# Part 2
 def mapRange(r_start, r_length, map):
     rs = []
 
@@ -65,11 +64,13 @@ def mapRange(r_start, r_length, map):
 
     return rs
 
+# initial list of ranges
 rs = [
     (maps[0][0][i], maps[0][0][i + 1])
     for i in range(0, len(maps[0][0]), 2)
 ]
 
+# map list of ranges to new ranges
 for m in maps[1:]:
     rs = [
         nr
