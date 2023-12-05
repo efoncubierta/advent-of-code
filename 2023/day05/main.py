@@ -15,16 +15,18 @@ with open("input.txt", "r") as file:
     ]
 
 # Part 1
-rs = maps[0][0] # initial values
+def mapNext(v, map):
+    for m in map:
+        if m[1] <= v < (m[1] + m[2]):
+            return m[0] + (v - m[1])
+    return v
 
-# iterate over all maps mapping current values
-for m in maps[1:]:
-    rs = [
-        d_start + (r - s_start)
-        for r in rs
-        for d_start, s_start, length in m
-        if s_start <= r < (s_start + length)
-    ]
+rs = []
+for s in maps[0][0]: # seeds
+    for m in maps[1:]: # maps
+        s = mapNext(s, m)
+    rs.append(s)
+
 print("Part 1: {}".format(min(rs)))
 
 # Part 2
