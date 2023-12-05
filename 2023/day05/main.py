@@ -30,11 +30,29 @@ print("Part 1: {}".format(min(result)))
 def mapRange(r_start, r_length, map):
     rs = []
 
+    # r_start and r_length are the initial range start and length values.
+    # This algorithms generates a list of ranges in the given map,
+    # considering overlapping ranges and ranges outside of the map.
+    # 
+    # For example,
+    #
+    # r_start = 5
+    # r_length = 10
+    # map = [[12, 10, 10]]
+    #
+    # returns [[5, 5], [12, 5]]
+    #
+    # total lengths in resulting ranges is = r_length
+
+
+    # end of the initial range
     r_end = r_start + r_length
 
-    # is below first range
+    # is below first range in the map
     if r_start < map[0][1]:
         if r_end < map[0][1]:
+            # both values are below first range
+            # no need to check further
             rs.append((r_start, r_length))
             return rs
         else:
@@ -43,23 +61,27 @@ def mapRange(r_start, r_length, map):
 
     # iterate over maps
     for (d_start, s_start, length) in map:
-        # source start and end values]
+        # source start and end values
         s_end = s_start + length
         if s_start <= r_start < s_end:
             delta = (r_start - s_start)
             # new destination start
             n_d_start = d_start + delta
+
+            # all values contains in current range, no overlapping
             if r_end < s_end:
                 rs.append((n_d_start, r_length))
                 r_length = 0
                 break
+            # overlapping, add sub-range and move to next range in map
             else:
                 rs.append((n_d_start, length - delta))
                 r_start = s_end
                 r_length = r_length - length - delta
 
-    # is above last range
+    # is above last range in the map
     if r_length > 0:
+        # add remaining range
         rs.append((r_start, r_length))
 
     return rs
