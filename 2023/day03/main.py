@@ -41,12 +41,9 @@ total = 0
 
 # get all numbers by row, column start and column end
 numbers = [
-    (row, col_start, col_end, int(input[col_start:col_end+1]))
+    (row, m.start(), m.end() - 1, int(input[m.start():m.end()]))
     for row, input in enumerate(inputs)
-    for (col_start, col_end) in [
-        (m.start(), m.end() - 1)
-        for m in re.finditer("\d+", input)
-    ]
+    for m in re.finditer("\d+", input)
 ]
 
 # Part 1
