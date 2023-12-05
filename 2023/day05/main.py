@@ -43,23 +43,21 @@ def mapRange(r_start, r_length, map):
             r_start = m[0][1]
 
     # iterate over maps
-    for m in map:
-        # source start and end values
-        s_start = m[1]
-        s_length = m[2]
-        s_end = s_start + s_length
+    for (d_start, s_start, length) in map:
+        # source start and end values]
+        s_end = s_start + length
         if s_start <= r_start < s_end:
             delta = (r_start - s_start)
             # new destination start
-            n_d_start = m[0] + delta
+            n_d_start = d_start + delta
             if r_end < s_end:
                 rs.append((n_d_start, r_length))
                 r_length = 0
                 break
             else:
-                rs.append((n_d_start, s_length - delta))
+                rs.append((n_d_start, length - delta))
                 r_start = s_end
-                r_length = r_length - s_length - delta
+                r_length = r_length - length - delta
 
     # is above last range
     if r_length > 0:
