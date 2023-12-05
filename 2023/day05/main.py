@@ -1,30 +1,31 @@
 import re
 
-with open("input.txt", "r") as file:
-    inputs = file.read().split("\n\n")
+def parse_block(block):
+    m = re.search("([^:]+):\n? ?(.*)", block, re.DOTALL)
+    return sorted([
+        [int(n) for n in line.split(" ")]
+        for line in m.group(2).split("\n")
+    ], key=lambda x: x[1])
 
-maps = []
-for input in inputs:
-    m = re.search("([^:]+):\n? ?(.*)", input, re.DOTALL)
-    maps.append(sorted([
-        [int(n) for n in x.split(" ")]
-        for x in m.group(2).split("\n")
-    ], key=lambda x: x[1]))
+
+with open("input.txt", "r") as file:
+    maps = [
+        parse_block(block)
+        for block in file.read().strip().split("\n\n")
+    ]
 
 # Part 1
-def mapNext(v, map):
-    for m in map:
-        if m[1] <= v < (m[1] + m[2]):
-            return m[0] + (v - m[1])
-    return v
+rs = maps[0][0] # initial values
 
-result = []
-for s in maps[0][0]: # seeds
-    for m in maps[1:]: # maps
-        s = mapNext(s, m)
-    result.append(s)
-
-print("Part 1: {}".format(min(result)))
+# iterate over all maps mapping current values
+for m in maps[1:]:
+    rs = [
+        d_start + (r - s_start)
+        for r in rs
+        for d_start, s_start, length in m
+        if s_start <= r < (s_start + length)
+    ]
+print("Part 1: {}".format(min(rs)))
 
 # Part 2
 def mapRange(r_start, r_length, map):
@@ -53,11 +54,11 @@ def mapRange(r_start, r_length, map):
         if r_end < map[0][1]:
             # both values are below first range
             # no need to check further
-            rs.append((r_start, r_length))
-            return rs
+            return [(r_start, r_length)]
         else:
             rs.append((r_start, m[0][1] - r_start))
             r_start = m[0][1]
+            r_length -= m[0][1] - r_start
 
     # iterate over maps
     for (d_start, s_start, length) in map:
@@ -77,7 +78,7 @@ def mapRange(r_start, r_length, map):
             else:
                 rs.append((n_d_start, length - delta))
                 r_start = s_end
-                r_length = r_length - length - delta
+                r_length -= length - delta
 
     # is above last range in the map
     if r_length > 0:
