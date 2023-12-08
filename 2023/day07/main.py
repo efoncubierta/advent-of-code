@@ -23,16 +23,15 @@ with open("input.txt", "r") as file:
       ]
 
 def hand_score(hand, partTwo=False):
-    if partTwo:
-        hand = hand.replace("J", "")
-
     # count card appearances
-    hs = {}
+    hc = {}
     for h in hand:
-        if h not in hs:
-            hs[h] = 0
-        hs[h] += 1
-    cs = sorted(list(hs.values()), reverse=True)
+        if partTwo and h == 'J':
+            continue
+        if h not in hc:
+            hc[h] = 0
+        hc[h] += 1
+    cs = sorted(list(hc.values()), reverse=True)
 
     if partTwo:
         # special case, all of them are J's
