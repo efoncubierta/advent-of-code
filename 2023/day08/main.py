@@ -28,8 +28,8 @@ current = [(a, 0) for a in inputs if a[2] == 'A']
 while not found:
     for m in moves:
         i = 0 if m == 'L' else 1
-        # find path length to a Z node for every A
-        # once found, do not continue with that node
+        # find path length to a Z node for every A. It repeats every N steps.
+        # once found, do not continue moving that node's path
         current = [
             (inputs[cur[0]][i], cur[1] + 1) if cur[0][2] != 'Z' else cur
             for cur in current
@@ -39,4 +39,5 @@ while not found:
             break
 
 # total steps is the least common divisor of each individual path's length
+# in the example, these are lcm([2, 3]) = 6
 print("Part 2: {}".format(math.lcm(*[cur[1] for cur in current])))
