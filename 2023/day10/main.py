@@ -55,31 +55,23 @@ for k in PIPES:
         inputs[start_y][start_x] = k
         break
 
-def left(d):
-    return (d[1]*-1, d[0])
-def right(d):
-    return (d[1], d[0]*-1)
+def reverse(d):
+    return (d[0]*-1, d[1]*-1)
 def move(p, d):
     return (p[0] + d[0], p[1] + d[1])
 
 # Part 1
 path = [(start_x, start_y)]
-c_d = SOUTH # start moving south
+# start moving in one of the available directions
+c_d = PIPES[inputs[start_y][start_x]][0]
 while True:
-    (c_x, c_y) = path[-1]
-    c_p = PIPES[inputs[c_y][c_x]]
+    # current pipe type
+    c_k = inputs[path[-1][1]][path[-1][0]]
+    # get the next available direction that is not backwards
+    c_d = PIPES[c_k][0] if PIPES[c_k][0] != reverse(c_d) else PIPES[c_k][1]
 
-    for n_d in [c_d, left(c_d), right(c_d)]:
-        (n_x, n_y) = move(path[-1], n_d)
-
-        if (
-            0 <= n_x < w and
-            0 <= n_y < h and
-            n_d in c_p
-        ):
-            path.append((n_x, n_y))
-            c_d = n_d
-            break
+    # move
+    path.append(move(path[-1], c_d))
 
     if (start_x, start_y) == path[-1]:
         path.pop()
@@ -88,13 +80,12 @@ while True:
 print("Part 1: {}".format(int(len(path) / 2)))
 
 # Part 2
-p = Path(path)
-total = 0
-for y in range(h):
-    for x in range(w):
-        if (x, y) in path:
-            continue
-        if p.contains_point((x, y)):
-            total += 1
+polygon = Path(path)
+total = sum([
+    polygon.contains_point((x, y))
+    for y in range(h)
+    for x in range(w)
+    if (x, y) not in path
+])
 
 print("Part 2: {}".format(total))
