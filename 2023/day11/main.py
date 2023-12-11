@@ -43,7 +43,7 @@ total = sum([
 ])
 print("Part 1: {}".format(total))
 
-# Part 1
+# Part 2
 total = sum([
     distance(g1, g2, factor = 1000000)
     for i, g1 in enumerate(galaxies)

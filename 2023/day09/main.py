@@ -4,7 +4,7 @@ with open("input.txt", "r") as file:
         for line in file.read().split("\n")
     ]
 
-def solve(seq, backwards=False):
+def solve(seq):
     if not any(seq):
         return seq + [0]
     
@@ -13,19 +13,12 @@ def solve(seq, backwards=False):
         for i in range(1, len(seq))
     ]
 
-    if backwards:
-        return [seq[0] - solve(nseq, backwards)[0]] + seq
-    else:
-        return seq + [seq[-1] + solve(nseq)[-1]]    
+    return seq + [seq[-1] + solve(nseq)[-1]]
 
 # Part 1
-total = 0
-for input in inputs:
-    total += solve(input)[-1]
+total = sum([solve(input)[-1] for input in inputs])
 print("Part 1: {}".format(total))
 
 # Part 2
-total = 0
-for input in inputs:
-    total += solve(input, backwards=True)[0]
+total = sum([solve(list(reversed(input)))[-1] for input in inputs])
 print("Part 2: {}".format(total))
