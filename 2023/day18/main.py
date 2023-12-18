@@ -18,7 +18,7 @@ directions = {
 }
 
 def volume(part2 = False):
-    p = 0
+    p = 0 # length of perimeter
     xs = [0]
     ys = [0]
     for input in inputs:
@@ -28,9 +28,10 @@ def volume(part2 = False):
         xs.append(xs[-1] + l*d[0])
         ys.append(ys[-1] + l*d[1])
 
-    a = 0.5*np.abs(np.dot(xs,np.roll(ys,1))-np.dot(ys,np.roll(xs,1)))
-    return int((a + 1 - p // 2) + p)
-
+    # shoelace formula
+    a = 0.5 * np.abs(np.dot(xs, np.roll(ys, 1)) - np.dot(ys, np.roll(xs, 1)))
+    # need to correct the area with half the perimeter, as it is countint from 0 to w-1, and 0 to h-1
+    return int((a + p/2) + 1)
 
 print("Part 1: {}".format(volume()))
 print("Part 2: {}".format(volume(True)))

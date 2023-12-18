@@ -19,16 +19,16 @@ def solve(springs, numbers):
             return 1 if n_i == len(numbers) else 0
         
         total = 0
-        # current index is not damaged
+        # current spring is not damaged
         if springs[s_i] != '#':
             # the previous was operational (not counting damages)
             if not c:
-                # move to next index
+                # move to next spring
                 total += find(s_i + 1, n_i, 0)
             # the previous was damaged. End counting
             elif n_i < len(numbers) and c == numbers[n_i]:
                 total += find(s_i + 1, n_i + 1, 0)
-        # current index is not operational
+        # current spring is not operational
         if springs[s_i] != '.':
             # consider it damaged (inc counter), and move to next one
             total += find(s_i + 1, n_i, c + 1)
