@@ -8,12 +8,6 @@ def parse_module(str):
     else:
         return (ps[0], None, ps[1].split(", "))
 
-def lcm(ns):
-    total = 1
-    for n in ns:
-        total = (total * n) // math.gcd(n, total)
-    return total
-
 with open("input.txt", "r") as file:
     inputs = [
         parse_module(input)
@@ -42,7 +36,8 @@ PART2_S = {
 def solve(part2 = False):
     S = (0, 0) # signals counter (high, low)
     N = 0      # button pushes
-    LCM = []   # in part1, least-common divisor items
+    part2_n = 0
+    part2_total = 1 # in part1, least-common divisor items
     while N == 0 or (not part2 and N < 1000) or (part2 and N < 100000000):
         # queue (source, targets, signal)
         Q = deque([('broadcaster', M['broadcaster'][1], False)])
@@ -62,12 +57,14 @@ def solve(part2 = False):
                 if part2:
                     if mod in PART2_S and not sig:
                         if PART2_S[mod][0] == 2 and PART2_S[mod][1] > 0:
-                            LCM.append(N - PART2_S[mod][1])
+                            n = N - PART2_S[mod][1]
+                            part2_n += 1
+                            part2_total = (part2_total * n) // math.gcd(n, part2_total)
+                            if part2_n == len(PART2_S.keys()):
+                                return part2_total
                         else:
                             PART2_S[mod][0] += 1
                             PART2_S[mod][1] = N
-                    if len(LCM) == len(PART2_S.keys()):
-                        return lcm(LCM)
                 
                 # ignore test modules
                 if mod not in M:
