@@ -1,13 +1,16 @@
 with open("input.txt", "r") as f:
     input = [int(n) for n in f.read()]
 
-FILES, SIZES = [], {}
+FILES, SIZES, FREE = [], {}, []
 id = -1
 for i in range(0, len(input), 2):
     id += 1
     FILES += [id] * input[i]
-    FILES += [-1] * input[i+1] if i+1 < len(input) else [] # free space is -1
+    if (i+1 < len(input)):
+        FREE.append((len(FILES), input[i+1]))
+        FILES += [-1] * input[i+1]# free space is -1
     SIZES[id] = input[i]
+
 
 def sort1(files):
     i, j = 0, len(files) - 1
@@ -33,26 +36,23 @@ def sort2(files):
         file_s = SIZES[files[file_i]]
         file_i = file_i - file_s + 1
         
-        space_i = 0
-        while space_i < file_i:
-            # find next free space from the left
-            while files[space_i] >= 0:
-                space_i += 1
+        # find free space to move the file
+        for space_i, space in enumerate(FREE):
+            # no space towards the left
+            if space[0] > file_i:
+                break
+            # skip if not enough space
+            if space[1] < file_s:
                 continue
             
-            space_s = 1
-            while (space_i + space_s) < len(files) and files[space_i + space_s] < 0:
-                space_s += 1
+            # move file
+            for jj in range(file_s):
+                files[space[0]+jj] = files[file_i+jj]
+                files[file_i+jj] = -1
             
-            # move if file fits in free space, and jump to next file
-            if space_i < file_i and space_s >= file_s:
-                for jj in range(file_s):
-                    files[space_i+jj] = files[file_i+jj]
-                    files[file_i+jj] = -1
-                break
-            
-            # if not, move forward to find next free space
-            space_i += space_s
+            # recalculate space
+            FREE[space_i] = (space[0]+file_s, space[1]-file_s)
+            break
         
         # move backwards to find the next file
         file_i -= 1
