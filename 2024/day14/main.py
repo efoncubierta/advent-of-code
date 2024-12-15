@@ -27,10 +27,15 @@ while True:
         n_y = (n_y + v_y * i) % h
         pos.add((n_x, n_y))
 
-    # not great as it is not checking for the entire tree, but it works
+    # not great as it is not checking for the entire tree, but it works. It checks for
+    # ..#..
+    # .###.
+    # #####
+    #
     tree = False
     for (p_x, p_y) in pos:
-        if (p_x + 1, p_y + 1) in pos and \
+        if 2 <= p_x < w - 2 and 2 <= p_y < h - 2 and \
+            (p_x + 1, p_y + 1) in pos and \
             (p_x, p_y + 1) in pos and \
             (p_x - 1, p_y + 1) in pos and \
             (p_x - 2, p_y + 2) in pos and \
