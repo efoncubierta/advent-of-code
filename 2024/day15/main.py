@@ -5,11 +5,11 @@ MAP = [[c for c in l] for l in input[0].split("\n")]
 MOVS = ''.join(input[1].split("\n"))
 DIR = {'^': (0, -1), '>': (1, 0), 'v': (0, 1), '<': (-1, 0)}
 
-def start(map):
+def find_robot(map):
     return [(x, y) for y in range(len(map)) for x in range(len(map[0])) if map[y][x] == '@'][0]
 
 def gps_sum(map):
-    return sum([y*100 + x for y in range(len(map)) for x in range(len(map[0])) if map[y][x] == 'O' or map[y][x] == '['])
+    return sum([y*100 + x for y in range(len(map)) for x in range(len(map[0])) if map[y][x] in 'O['])
 
 def extend(map):
     map_e = []
@@ -20,8 +20,8 @@ def extend(map):
         map_e.append(l)
     return map_e
 
-def move(map):
-    c_x, c_y = start(map)
+def move_robot(map):
+    c_x, c_y = find_robot(map)
     for m in MOVS:
         d_x, d_y = DIR[m]
         pos = [(c_x, c_y)]
@@ -46,5 +46,5 @@ def move(map):
             c_x, c_y = c_x + d_x, c_y + d_y
     return map
 
-print("Part 1: {}".format(gps_sum(move([r.copy() for r in MAP]))))
-print("Part 2: {}".format(gps_sum(move(extend(MAP)))))
+print("Part 1: {}".format(gps_sum(move_robot([r.copy() for r in MAP]))))
+print("Part 2: {}".format(gps_sum(move_robot(extend(MAP)))))
