@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from itertools import combinations
 
 with open("input.txt", "r") as f:
     input = f.read().split("\n\n")
@@ -16,11 +17,11 @@ for l in input[1].splitlines():
     if m:
         GATES.append(m.groups())
 
-def simulate(state):
+def simulate(state, gates):
     resolved = False
     while not resolved:
         resolved = True
-        for w1, op, w2, wo in GATES:
+        for w1, op, w2, wo in gates:
             if state[wo] is None:
                 if state[w1] is not None and state[w2] is not None:
                     if op == 'AND':
@@ -34,7 +35,7 @@ def simulate(state):
     return state
 
 STATE = defaultdict(lambda: None, I_STATE)
-STATE = simulate(STATE)
+STATE = simulate(STATE, GATES)
 
 binary_str = ''.join(map(str, reversed([STATE[k] for k in sorted(STATE.keys()) if k.startswith('z')])))
 print("Part 1:", int(binary_str, 2))
